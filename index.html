@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>HTML Calculator</title>
+
+  <!-- For styling -->
+  <style>
+    table {
+      border: 5px solid black;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    input[type="button"] {
+      width: 100%;
+      padding: 20px 40px;
+      background-color: green;
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+    }
+
+    input[type="text"] {
+      padding: 20px 30px;
+      font-size: 24px;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      border: 2px solid black;
+      width: 100%;
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+
+<body>
+ <h1>Caluculator</h1>
+  <!-- Create table -->
+  <table id="calcu">
+    <tr>
+      <td colspan="3">
+        <input type="text" id="result" readonly>
+      </td>
+      <td><input type="button" value="c" id="clear"></td>
+    </tr>
+
+    <tr>
+      <td><input type="button" value="1"></td>
+      <td><input type="button" value="2"></td>
+      <td><input type="button" value="3"></td>
+      <td><input type="button" value="/" class="operator"></td>
+    </tr>
+    <tr>
+      <td><input type="button" value="4"></td>
+      <td><input type="button" value="5"></td>
+      <td><input type="button" value="6"></td>
+      <td><input type="button" value="*" class="operator"></td>
+    </tr>
+    <tr>
+      <td><input type="button" value="7"></td>
+      <td><input type="button" value="8"></td>
+      <td><input type="button" value="9"></td>
+      <td><input type="button" value="-" class="operator"></td>
+    </tr>
+    <tr>
+      <td><input type="button" value="0"></td>
+      <td><input type="button" value="."></td>
+      <td><input type="button" value="=" id="equals"></td>
+      <td><input type="button" value="+" class="operator"></td>
+    </tr>
+  </table>
+</body>
+<script>
+  document.addEventListener('DOMContentLoaded', (event) => {
+    const result = document.getElementById('result');
+    let currentInput = '';
+    let operator = '';
+    let operand1 = '';
+    let operand2 = '';
+
+    // Function to clear the calculator screen
+    function clearScreen() {
+      currentInput = '';
+      operator = '';
+      operand1 = '';
+      operand2 = '';
+      result.value = '';
+    }
+
+    // Function to update the screen
+    function updateScreen(value) {
+      result.value = value;
+    }
+
+    // Function to handle button clicks
+    function handleButtonClick(value) {
+      if (!isNaN(value) || value === '.') {
+        currentInput += value;
+        updateScreen(currentInput);
+      } else if (value === 'c') {
+        clearScreen();
+      } else if (value === '=') {
+        if (operand1 && operator && currentInput) {
+          operand2 = currentInput;
+          const calcResult = calculate(operand1, operand2, operator);
+          updateScreen(calcResult);
+          currentInput = calcResult;
+          operator = '';
+          operand1 = '';
+          operand2 = '';
+        }
+      } else {
+        if (currentInput) {
+          operand1 = currentInput;
+          operator = value;
+          currentInput = '';
+        }
+      }
+    }
+
+    // Function to perform the calculation
+    function calculate(op1, op2, operator) {
+      const num1 = parseFloat(op1);
+      const num2 = parseFloat(op2);
+      switch (operator) {
+        case '+':
+          return num1 + num2;
+        case '-':
+          return num1 - num2;
+        case '*':
+          return num1 * num2;
+        case '/':
+          return num2 !== 0 ? num1 / num2 : 'Error';
+        default:
+          return 'Error';
+      }
+    }
+
+    // Add event listeners to the buttons
+    const buttons = document.querySelectorAll('input[type="button"]');
+    buttons.forEach(button => {
+      button.addEventListener('click', () => {
+        handleButtonClick(button.value);
+      });
+    });
+  });
+
+</script>
+
+</html>
